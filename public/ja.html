@@ -14,18 +14,32 @@
 
 <button onclick="downloadVideo()">確認</button>
 
+<p id="result"></p>
+
 <script>
 async function downloadVideo() {
   const url = document.getElementById("url").value;
+  const result = document.getElementById("result");
 
-  const res = await fetch(
-    "https://reelfetch-api-bdhs.onrender.com/download?url=" +
-    encodeURIComponent(url)
-  );
+  result.innerText = "確認中...";
 
-  const data = await res.json();
+  try {
+    const res = await fetch(
+      "https://reelfetch-api-bdhs.onrender.com/download?url=" +
+      encodeURIComponent(url)
+    );
 
-  alert(data.title || data.error);
+    const data = await res.json();
+
+    if (data.title) {
+      result.innerText = "タイトル: " + data.title;
+    } else {
+      result.innerText = "エラー: " + (data.error || "取得できませんでした");
+    }
+
+  } catch (e) {
+    result.innerText = "通信エラー: " + e.message;
+  }
 }
 </script>
 
