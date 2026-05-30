@@ -5,6 +5,7 @@ import yt_dlp
 
 app = FastAPI()
 
+# Vercel から Render API を呼べるようにする
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"],
@@ -22,19 +23,25 @@ def download(url: str):
     try:
         ydl_opts = {
             "format": "best",
-            "quiet": True
+            "quiet": True,
+            "no_warnings": True
         }
 
+        # Instagram / YouTube 共通で情報取得
         with yt_dlp.YoutubeDL(ydl_opts) as ydl:
             info = ydl.extract_info(url, download=False)
 
         return JSONResponse({
+            "success": True,
             "title": info.get("title"),
             "url": info.get("webpage_url")
         })
 
     except Exception as e:
         return JSONResponse(
-            {"error": str(e)},
+            {
+                "success": False,
+                "error": str(e)
+            },
             status_code=400
         )
