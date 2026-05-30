@@ -14,18 +14,32 @@
 
 <button onclick="downloadVideo()">Check</button>
 
+<p id="result"></p>
+
 <script>
 async function downloadVideo() {
   const url = document.getElementById("url").value;
+  const result = document.getElementById("result");
 
-  const res = await fetch(
-    "https://reelfetch-api-bdhs.onrender.com/download?url=" +
-    encodeURIComponent(url)
-  );
+  result.innerText = "Checking...";
 
-  const data = await res.json();
+  try {
+    const res = await fetch(
+      "https://reelfetch-api-bdhs.onrender.com/download?url=" +
+      encodeURIComponent(url)
+    );
 
-  alert(data.title || data.error);
+    const data = await res.json();
+
+    if (data.title) {
+      result.innerText = "Title: " + data.title;
+    } else {
+      result.innerText = "Error: " + (data.error || "Could not fetch");
+    }
+
+  } catch (e) {
+    result.innerText = "Network error: " + e.message;
+  }
 }
 </script>
 
