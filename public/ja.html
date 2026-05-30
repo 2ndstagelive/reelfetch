@@ -31,14 +31,17 @@ async function downloadVideo() {
 
     const data = await res.json();
 
-    if (data.title) {
-      result.innerText = "タイトル: " + data.title;
+    if (data.success) {
+      result.innerText =
+        "タイトル: " + data.title;
     } else {
-      result.innerText = "エラー: " + (data.error || "取得できませんでした");
+      result.innerText =
+        data.error;
     }
 
   } catch (e) {
-    result.innerText = "通信エラー: " + e.message;
+    result.innerText =
+      "通信エラーが発生しました。";
   }
 }
 </script>
